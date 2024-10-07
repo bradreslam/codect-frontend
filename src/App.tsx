@@ -1,11 +1,15 @@
 import React from 'react';
-import ComponentList from './ComponentList'; // Adjust the import path as needed
+import Sidebar from './components/Sidebar.tsx';
+import Footer from './components/Footer.tsx';
+import './App.css';
 
 const App: React.FC = () => {
     return (
-        <div>
-            <h1>Components List</h1>
-            <ComponentList />
+        <div style={{ display: 'flex' }}>
+            <Sidebar />
+            <div style={{ marginLeft: '250px', padding: '20px', width: '100%' }}>
+                <Footer />
+            </div>
         </div>
     );
 };
