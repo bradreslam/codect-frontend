@@ -42,7 +42,7 @@ const ComponentList = () => {
     }
 
     return (
-        <div>
+        <div data-cy={"componentList"}>
             {items.length > 0 ? (
                 items.map(({ id, details, image }) => (
                     <div key={id} style={{display: 'flex',
@@ -59,7 +59,7 @@ const ComponentList = () => {
                                 <p><strong>Feature:</strong> {details.feature}</p>
                             </div>
                             {/* Right Section: Image */}
-                            <div style={{flex: 1, width: '200px', height: 'auto', marginBottom: '-30px'}}>
+                            <div  style={{flex: 1, width: '200px', height: 'auto', marginBottom: '-30px'}}>
                                 <div
                                     dangerouslySetInnerHTML={{__html: image}}
                                     style={{

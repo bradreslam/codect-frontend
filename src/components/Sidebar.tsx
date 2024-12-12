@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { X } from "@phosphor-icons/react";
+import React, {useEffect, useState} from 'react';
+import {X} from "@phosphor-icons/react";
 import ComponentList from "../ComponentList.tsx";
+import Toast from "typescript-toastify";
 
 const Sidebar: React.FC = () => {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
@@ -33,12 +34,32 @@ const Sidebar: React.FC = () => {
 
             if (!response.ok) new Error('Failed to submit form');
 
-            const result = await response.json(); // Process the response if needed
-            console.log("Form submitted successfully:", result);
+            return new Toast({
+                position: "top-right",
+                toastMsg: "Component was created successfully",
+                autoCloseTime: 2000,
+                canClose: true,
+                showProgress: true,
+                pauseOnHover: true,
+                pauseOnFocusLoss: true,
+                type: "success",
+                theme: "dark"
+            });
             // Optionally, close the overlay after submission
             toggleOverlay();
         } catch (error) {
-            console.error("Error submitting form:", error);
+            const toast = new Toast({
+                position: "top-right",
+                toastMsg: {error}.toString(),
+                autoCloseTime: 2000,
+                canClose: true,
+                showProgress: true,
+                pauseOnHover: true,
+                pauseOnFocusLoss: true,
+                type: "error",
+                theme: "dark"
+            });
+            return toast;
         }
     };
 
@@ -86,6 +107,8 @@ const Sidebar: React.FC = () => {
             }}>
                 <button
                     onClick={toggleOverlay}
+                    data-cy="toggle-overlay"
+                    data-is-open={isOverlayOpen}
                     style={{
                         marginTop: '20px',
                         padding: '10px',
@@ -138,6 +161,7 @@ const Sidebar: React.FC = () => {
                         <div style={{marginBottom: '10px'}}>
                             <h3>Choose an Option:</h3>
                             <select
+                                data-cy={"Feature-select"}
                                 value={Feature}
                                 onChange={handleDropdownChange}
                                 style={{
@@ -162,6 +186,7 @@ const Sidebar: React.FC = () => {
                             {options.map(option => (
                                 <label key={option} style={{display: 'block', marginBottom: '5px'}}>
                                     <input
+                                        data-cy={"endpoint-select"}
                                         type="checkbox"
                                         value={option}
                                         checked={ContactPoints.includes(option)}
