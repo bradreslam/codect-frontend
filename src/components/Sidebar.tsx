@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, Suspense} from 'react';
 import {X} from "@phosphor-icons/react";
 import ComponentList from "../ComponentList.tsx";
 import Toast from "typescript-toastify";
@@ -8,6 +8,7 @@ const Sidebar: React.FC = () => {
     const [ContactPoints, setSelectedOptions] = useState<string[]>([]);
     const [Feature, setSelectedDropdownOption] = useState('');
     const [dropdownOptions, setDropdownOptions] = useState<string[]>([]);
+    const componentListRef = useRef<{ updateData: (id: string) => Promise<void> }>(null);
 
     const options = ["N", "E", "S", "W"];
 
@@ -24,7 +25,7 @@ const Sidebar: React.FC = () => {
         };
 
         try {
-            const response = await fetch('https://localhost:7278/api/components/createComponent', {
+            const response = await fetch('https://localhost:7278/components/new-component', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,9 +33,30 @@ const Sidebar: React.FC = () => {
                 body: JSON.stringify(formData), // Convert the data to JSON
             });
 
-            if (!response.ok) new Error('Failed to submit form');
+            // Handle error responses
+            if (!response.ok) {
+                // Read response body for error details
+                const errorDetails = await response.json();
 
-            return new Toast({
+                // Safely extract the error message from the response
+                const errorMessage = errorDetails?.message || "An unknown error occurred";
+
+                new Toast({
+                    position: "top-right",
+                    toastMsg: `Error: ${errorMessage}`,
+                    autoCloseTime: 5000,
+                    canClose: true,
+                    showProgress: true,
+                    pauseOnHover: true,
+                    pauseOnFocusLoss: true,
+                    type: "error",
+                    theme: "dark",
+                });
+                return;
+            }
+
+            // Success notification
+            new Toast({
                 position: "top-right",
                 toastMsg: "Component was created successfully",
                 autoCloseTime: 2000,
@@ -43,23 +65,29 @@ const Sidebar: React.FC = () => {
                 pauseOnHover: true,
                 pauseOnFocusLoss: true,
                 type: "success",
-                theme: "dark"
+                theme: "dark",
             });
-            // Optionally, close the overlay after submission
+
+            // Call `updateData` if the `componentListRef` is available
+            if (componentListRef.current) {
+                await componentListRef.current.updateData(response.toString()); // Pass the appropriate ID
+            }
+
             toggleOverlay();
         } catch (error) {
-            const toast = new Toast({
+            // Handle unexpected errors
+            console.error("Error during submission:", error);
+            new Toast({
                 position: "top-right",
-                toastMsg: {error}.toString(),
+                toastMsg: `Unexpected error: ${error}`,
                 autoCloseTime: 2000,
                 canClose: true,
                 showProgress: true,
                 pauseOnHover: true,
                 pauseOnFocusLoss: true,
                 type: "error",
-                theme: "dark"
+                theme: "dark",
             });
-            return toast;
         }
     };
 
@@ -67,7 +95,7 @@ const Sidebar: React.FC = () => {
     useEffect(() => {
         const fetchOptions = async () => {
             try {
-                const response = await fetch('https://localhost:7278/api/components/featureList');
+                const response = await fetch('https://localhost:7278/features');
                 if (!response.ok) new Error("Failed to fetch options");
                 const data: string[] = await response.json(); // Assuming the response is a list of strings
                 setDropdownOptions(data); // Update state with the fetched options
@@ -121,7 +149,9 @@ const Sidebar: React.FC = () => {
                     Open component creator
                 </button>
                 <div style={{marginTop: '20px', overflowY: 'auto', maxHeight: '90%'}}>
-                    <ComponentList/>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <ComponentList/>
+                    </Suspense>
                 </div>
             </aside>
 
@@ -197,6 +227,7 @@ const Sidebar: React.FC = () => {
                             ))}
                         </div>
                         <button
+                            data-cy={"submit-component"}
                             type="submit"
                             style={{
                                 padding: '5px',

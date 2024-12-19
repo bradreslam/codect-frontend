@@ -5,7 +5,7 @@ const api = axios.create({
 });
 export const getDescription = async (id: string) => {
     try {
-        const response = await api.get(`/api/components/${id}/ComponentInfo`);
+        const response = await api.get(`/components/${id}`);
 
         return response.data;
 
@@ -14,20 +14,25 @@ export const getDescription = async (id: string) => {
         return null;  // Return null in case of error
     }
 };
-export const getIds = async () => {
+export const getIds = async (): Promise<string[]> => {
     try {
-        const response = await api.get(`/api/components/getAllComponentIds`);
+        const response = await api.get(`/components/ids`);
 
-        return response.data;
+        const data = response.data;
 
+        if (Array.isArray(data) && data.every(item => typeof item === 'string')) {
+            return data as string[]; // Safe to assert
+        }
+
+        throw new Error("Id list is invalid");
     } catch (error) {
         console.error('Error fetching component ids:', error);
-        return null;  // Return null in case of error
+        throw error;
     }
 };
 export const getImage = async (id: string) => {
     try {
-        const response = await api.get(`/api/components/${id}/image.svg`);
+        const response = await api.get(`/components/${id}/image`);
 
         return response.data;
 
