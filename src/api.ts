@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https:/localhost:7278',  // Your .NET API URL
+    baseURL: 'https://localhost:7278',  // Your .NET API URL
 });
 export const getDescription = async (id: string) => {
     try {

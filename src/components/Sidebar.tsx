@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
         };
 
         try {
-            const response = await fetch('https://localhost:7278/components/new-component', {
+            const response = await fetch('https://localhost:7278/components', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
