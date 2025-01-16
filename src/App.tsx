@@ -11,15 +11,13 @@ import MultiRezGrid from "./javascript/grid";
 
 const App: React.FC = () => {
     return (
-        <body>
-            <div style={{display: 'flex'}} id="page">
-                <Sidebar/>
-                <div style={{marginLeft: '250px', padding: '20px', width: '100%'}}>
-                    <Footer/>
-                    <MultiRezGrid/>
-                </div>
+        <div style={{display: 'flex'}} id="page">
+            <Sidebar/>
+            <div style={{marginLeft: '250px', padding: '20px', width: '100%'}}>
+                <Footer/>
+                <MultiRezGrid/>
             </div>
-        </body>
+        </div>
     );
 };
 
