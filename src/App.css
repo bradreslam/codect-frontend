@@ -44,8 +44,4 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  background-image: url('/src/assets/Temp_grid.jpg');
-  background-size: cover;  /* Makes sure the image covers the whole page */
-  background-position: center;  /* Center the image */
-  background-repeat: no-repeat;  /* Prevent image from repeating */
 }

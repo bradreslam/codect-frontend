@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
 import {signalRService } from "./SignalRService"; // Import SignalRService
 import spinner from "./assets/blocks-wave.svg";
+import {cloneObject} from "./javascript/clone_objects.ts"
 
 const ComponentList = forwardRef(() => {
     const [items, setItems] = useState<
@@ -144,23 +145,25 @@ const ComponentList = forwardRef(() => {
                                 <strong>Feature:</strong> {item.details.feature}
                             </p>
                         </div>
-                        <div style={{ flex: 1, width: "200px", height: "auto", marginBottom: "-30px" }}>
+                        <div style={{flex: 1, width: "200px", height: "auto", marginBottom: "-30px"}}>
                             <div
-                                dangerouslySetInnerHTML={{ __html: item.image }}
+                                dangerouslySetInnerHTML={{__html: item.image}}
                                 style={{
                                     width: "100%",
                                     height: "auto",
+                                    cursor: "pointer"
                                 }}
+                                onClick={cloneObject}
                             />
                         </div>
                     </div>
-                    <div style={{ textAlign: "left" }}>
+                    <div style={{textAlign: "left"}}>
                         <p>{item.details.description}</p>
                     </div>
                 </div>
             ))}
             {loading && (
-                <div style={{ position: "relative", textAlign: "center", marginBottom: "12px" }}>
+                <div style={{position: "relative", textAlign: "center", marginBottom: "12px"}}>
                     <img src={spinner} alt="Loading..." />
                     Loading...
                 </div>

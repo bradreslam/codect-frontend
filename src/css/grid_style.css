@@ -1,0 +1,21 @@
+table {border-collapse: collapse; margin: 0 0 20px 0; width: 100%; height: 100%; border: 1px solid white}
+
+.bordered {border: 1px solid white;}
+
+.container {width:1400px; height:900px; right:0; position:fixed; top:0;}
+
+.dropBox{width:95px; height: 95px; border: 2px solid orange; background:#4D4D4D; float:left; position:absolute; opacity:0.7; text-align:center; }
+
+.drop-target {background: white}
+
+br {clear:both;}
+
+li {float:left;}
+
+td.bordered {
+    border: 1px solid black; /* Visible gridlines */
+    width: 50px; /* Fixed cell width */
+    height: 50px; /* Fixed cell height to make it square */
+    text-align: center;
+    vertical-align: middle;
+}
